@@ -1,0 +1,6 @@
+Lance Cole
+9/21/2022
+Dr.Blythe
+Developed On Mac using Xcode
+
+This project was fun and after doing so I have a better understanding of recursion. I started this program in Linux but it decided to crash and I didn't feel like troubleshooting so I just started over. I thought about this problem and approached a solution like we did 8 queens. In my program, I used three of the functions from 8queens and changed them to fit my solution. The programs has no bugs that I've encountered.
