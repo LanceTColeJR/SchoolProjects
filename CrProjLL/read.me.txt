@@ -1,4 +1,0 @@
-Lance Cole
-04-18-2022
-Developed on Xcode on MacOS
-Project was based on implementation from class and examples from the textbooks. In my class I used “Struct” in my class to help me not lose my way when initializing my instance variables for the list. I had to make minor changes to get the files to open up(Xcode issues) but overall got it to work.
