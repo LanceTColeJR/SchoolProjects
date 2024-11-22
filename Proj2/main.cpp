@@ -4,6 +4,13 @@
 
 extern FILE* yyin; // Declare yyin for file input
 
+
+int yyFlexLexer::yylex() {
+    // this call should never happen, but flex/bison requires its implementation
+    throw std::runtime_error("Bad call to yyFlexLexer::yylex()");
+}
+
+
 void yyerror(const char* msg) {
     std::cerr << "Error: " << msg << std::endl;
 }

@@ -2,7 +2,11 @@
 #include <iostream>
 #include <string>
 #include <cstdio>
+#include "MyScanner.hpp"
+#include <FlexLexer.h>
+
 using namespace std;
+using namespace yy;
 
 int global_var_count = 0;
 int current_local_var_count = 0;
@@ -24,6 +28,13 @@ int yylex(); // Declare yylex
 extern FILE* yyin; // Declare yyin
 
 %}
+
+%require "3.2"
+%language "C++"
+
+%defines "Parser.hpp"
+%output "Parser.cpp"
+%define api.parser.class {Parser}
 
 %union {
     int intval;

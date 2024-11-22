@@ -1,7 +1,9 @@
 %{
-#include "parser.hpp" // Include the parser header
-#include <cstdio>
 #include <iostream>   // Include iostream for std::cerr and std::endl
+#include <cstdio>
+#include "parser.hpp" // Include the parser header
+#include "MyScanner.hpp"
+
 extern FILE* yyin;    // Declare yyin to handle file input
 %}
 
