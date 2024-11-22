@@ -1,0 +1,152 @@
+%{
+#include <iostream>
+#include <string>
+#include <cstdio>
+using namespace std;
+
+int global_var_count = 0;
+int current_local_var_count = 0;
+int current_if_count = 0;
+int current_while_count = 0;
+
+void displayFunctionDetails(const string& name) {
+    cout << "Function: " << name << " contains:" << endl;
+    cout << "  * local variables: " << current_local_var_count << endl;
+    cout << "  * if statements: " << current_if_count << endl;
+    cout << "  * while statements: " << current_while_count << endl << endl;
+    current_local_var_count = 0;
+    current_if_count = 0;
+    current_while_count = 0;
+}
+
+void yyerror(const char* msg); // Declare yyerror
+int yylex(); // Declare yylex
+extern FILE* yyin; // Declare yyin
+
+%}
+
+%union {
+    int intval;
+    float floatval;
+    char* idval;
+}
+
+%token <idval> ID_T
+%token <intval> NUM_INT_T
+%token <floatval> NUM_REAL_T
+%token VOID_T INT_T FLOAT_T BEGIN_T END_T IF_T THEN_T ELSE_T WHILE_T
+%token ASSIGNOP_T ADDOP_T MULOP_T RELOP_T COMMA_T SEMICOLON_T LPAREN_T RPAREN_T
+%token AND_T OR_T NOT_T LBRACK_T RBRACK_T
+
+%type <intval> fplist
+%type <idval> varlist
+
+%nonassoc LOWER_THAN_ELSE
+%nonassoc THEN_T ELSE_T
+
+%%
+
+start
+    : pgm
+    ;
+
+pgm
+    : pgmpart pgm
+    | pgmpart
+    ;
+
+pgmpart
+    : vardecl { global_var_count++; }
+    | function
+    ;
+
+vardecl
+    : type varlist SEMICOLON_T
+    ;
+
+varlist
+    : ID_T COMMA_T varlist
+    | ID_T
+    ;
+
+type
+    : INT_T
+    | FLOAT_T
+    | VOID_T
+    ;
+
+function
+    : type ID_T LPAREN_T RPAREN_T body {
+          displayFunctionDetails(std::string($2));
+      }
+    | type ID_T LPAREN_T fplist RPAREN_T body {
+          current_local_var_count += $4;
+          displayFunctionDetails(std::string($2));
+      }
+    ;
+
+fplist
+    : ID_T COMMA_T fplist { $$ = 1 + $3; }
+    | ID_T { $$ = 1; }
+    ;
+
+body
+    : BEGIN_T bodylist END_T
+    ;
+
+bodylist
+    : vardecl bodylist { current_local_var_count++; }
+    | stmt bodylist
+    | /* empty */
+    ;
+
+stmt
+    : assign SEMICOLON_T
+    | fcall SEMICOLON_T
+    | while_stmt { current_while_count++; }
+    | if_stmt { current_if_count++; }
+    | body
+    ;
+
+assign
+    : ID_T ASSIGNOP_T expr
+    ;
+
+expr
+    : factor
+    | expr ADDOP_T factor
+    ;
+
+factor
+    : term
+    | factor MULOP_T term
+    ;
+
+term
+    : ID_T
+    | NUM_INT_T
+    | NUM_REAL_T
+    | LPAREN_T expr RPAREN_T
+    | ADDOP_T term
+    | fcall
+    ;
+
+fcall
+    : ID_T LPAREN_T RPAREN_T
+    | ID_T LPAREN_T aplist RPAREN_T
+    ;
+
+aplist
+    : expr COMMA_T aplist
+    | expr
+    ;
+
+while_stmt
+    : WHILE_T LPAREN_T expr RPAREN_T stmt
+    ;
+
+if_stmt
+    : IF_T LPAREN_T expr RPAREN_T THEN_T stmt %prec LOWER_THAN_ELSE
+    | IF_T LPAREN_T expr RPAREN_T THEN_T stmt ELSE_T stmt
+    ;
+%%
