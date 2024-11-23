@@ -1,14 +1,14 @@
 #include <iostream>
 #include <cstdio> // For FILE*
-#include "parser.hpp"
+#include "Parser.hpp"
 
 extern FILE* yyin; // Declare yyin for file input
 
 
-int yyFlexLexer::yylex() {
+/*int yyFlexLexer::yylex() {
     // this call should never happen, but flex/bison requires its implementation
     throw std::runtime_error("Bad call to yyFlexLexer::yylex()");
-}
+}*/
 
 
 void yyerror(const char* msg) {
@@ -27,8 +27,11 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    int result = yyparse(); // Call yyparse
+    int result = yyparse(); // Call parse
+    //Parse parser{ &scanner};
+    //parser.parse();
     fclose(yyin);
 
     return result;
+    //return 0;
 }

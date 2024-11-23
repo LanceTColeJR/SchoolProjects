@@ -2,12 +2,14 @@
 #include <iostream>
 #include <string>
 #include <cstdio>
-#include "MyScanner.hpp"
+#include "myScanner.hpp"
 #include <FlexLexer.h>
 #define YY_DECL int MyScanner::lex(Parser::semantic_type *yylval)
+//#define yylex(x) MyScanner->lex(x)
 
 using namespace std;
 using namespace yy;
+
 
 int global_var_count = 0;
 int current_local_var_count = 0;
@@ -26,9 +28,11 @@ void displayFunctionDetails(const string& name) {
 
 void yyerror(const char* msg); // Declare yyerror
 int yylex(); // Declare yylex
+int yyparse(); //Declare yyparsing
 extern FILE* yyin; // Declare yyin
 
 %}
+
 
 %require "3.2"
 %language "C++"

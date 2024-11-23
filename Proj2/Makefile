@@ -18,7 +18,7 @@ MyScanner.o: myScanner.cpp Parser.hpp myScanner.hpp
 myScanner.cpp: proj1-2.l myScanner.hpp
 	flex++ proj1-2.l
 
-Parser.hpp: calc.bis myScanner.hpp
+Parser.hpp: bison.bis myScanner.hpp
 	bison bison.bis
 
 Parser.cpp: proj1-2.l myScanner.hpp
